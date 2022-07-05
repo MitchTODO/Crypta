@@ -1,2 +1,2 @@
 # Crypta
-Native IOS Mobile Reference Application For DAO/ReFi Management
+Native iOS Mobile Reference Application For DAO/ReFi Management
