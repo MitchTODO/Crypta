@@ -12,12 +12,6 @@ Native iOS Mobile Reference Application For DAO/ReFi Management
 
   * [Requirements](#requirements)
   * [Project State](#project-state)
-  * [Ride Architecture](#ride-architecture)
-    + [Subscriptions ](#subscriptions-emitted-events)
-  * [Findings](#findings)
-    + [Upside](#upside)
-    + [Potential Shortcomings](#potential-shortcomings)
-    + [Bad Actors](#bad-actors)
   * [Components](#components)
     + [ Smart Contracts](#📄-smart-contracts)
     + [iOS App](#ios-app)
