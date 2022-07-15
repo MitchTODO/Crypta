@@ -76,7 +76,7 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 4. Send Funds to the app
 
-  ![pics/logingif.gif]()
+  ![](pics/logingif.gif)
 
   When launching for the first time login you will be prompted to create a new password for your built wallet. When completed you will be navigated to the `GroupsView`. You will need your password through the app to sign/send transactions.
 
