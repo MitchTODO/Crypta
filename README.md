@@ -72,7 +72,9 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 3. Start Xcode and open up the workspace
 
-    Build and launch the app
+    Build and launch the app 
+    
+    **Make sure you select a iOS simulator**
 
 4. Send Funds to the app
 
