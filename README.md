@@ -45,6 +45,9 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
     - Swift 5+
     - Cocoapods
 
+- MetaMask
+  - Celo
+
 ## Quick Start
 
 ### 📲 Crypta iOS App
@@ -69,13 +72,25 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 3. Start Xcode and open up the workspace
 
-Build and launch the app
+    Build and launch the app
 
-4. Login
+4. Send Funds to the app
 
-When launching for the first time login you will be prompted to create a new password for your wallet. When completed you will be navigated to the GroupsView  
+  ![pics/logingif.gif]()
 
+  When launching for the first time login you will be prompted to create a new password for your built wallet. When completed you will be navigated to the `GroupsView`. You will need your password through the app to sign/send transactions.
 
+  Before creating groups and voting you must add some liquidity to the app. This will be used to pay for the gas price associated with writing to the smart contract.
+
+  1. Navigate over the profile view then press the qr code this will copy your address.
+
+  2. Then with google go to Alfajores Testnet Faucet and paste your address then press to send.
+
+  3. Press refresh on the app and watch balance be updated
+
+5. Using the app
+
+    You can now participate in create groups, proposals and voting.
 
 ### 📄 Smart Contract
 
