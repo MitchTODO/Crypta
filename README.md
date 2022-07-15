@@ -60,7 +60,7 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
    With the same terminal cd into Crypta2.0 and install
 
-       cd Crypta2.0
+       cd Crypta/Crypta2.0
 
        pod install
 
