@@ -1,12 +1,11 @@
 
 ![App Pic](pics/appPic.png)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)]()
-
+![](https://img.shields.io/badge/platform-iOS-lightgray.svg?style=flat)
 ![Swift 5](https://img.shields.io/badge/Swift-5-orange.svg)
 ![web3](https://img.shields.io/badge/web3-support-blue.svg?style=flat)
-![](https://img.shields.io/badge/platform-iOS-lightgray.svg?style=flat)
-![](https://img.shields.io/badge/Language-Solidity-yellowgreen)
+![](https://img.shields.io/badge/Network-Celo-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 # Crypta
 Native iOS Mobile Reference Application For Celo DAO/ReFi Management projects.
@@ -28,7 +27,9 @@ Native iOS Mobile Reference Application For Celo DAO/ReFi Management projects.
     * [Async Calls](#async-calls)
       + [task](#task)
       + [ViewModels](#viewmodels)
-  * [License](#🔖 -licence)
+  + [Future Improvements](#future-improvements)
+  + [Contributing](contributing)
+  * [License](#🔖-licence)
 
 ---
 
@@ -45,10 +46,10 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
     - Swift 5+
     - Cocoapods
 
+(Optional)
 - MetaMask
-  - Celo
 
-## Quick Start
+# Quick Start
 
 ### 📲 Crypta iOS App
 
@@ -58,9 +59,11 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 2. Install Podfile
 
-   With the same terminal cd into Crypta2.0 and install
+   With the same terminal cd into Crypta2.0
 
-       cd Crypta/Crypta2.0
+       cd Crypta2.0
+
+  Install pods
 
        pod install
 
@@ -72,21 +75,19 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 3. Start Xcode and open up the workspace
 
-    Build and launch the app 
-    
-    **Make sure you select a iOS simulator**
+    Build and launch the app
 
 4. Send Funds to the app
 
-  ![](pics/logingif.gif)
+  ![pics/logingif.gif]()
 
-  When launching for the first time login you will be prompted to create a new password for your built wallet. When completed you will be navigated to the `GroupsView`. You will need your password through the app to sign/send transactions.
+  When launching for the first time, you will be prompted to create a new password for your wallet. When completed you will be navigated to the `GroupsView`. You will need your password throughout the app to sign/send transactions.
 
-  Before creating groups and voting you must add some liquidity to the app. This will be used to pay for the gas price associated with writing to the smart contract.
+  Before creating groups and voting you must add some liquidity to the app. This will be used to pay for the gas price associated with writing to the smart contract (ie creating managing groups, proposal and voting). Reading from the contract is free.
 
   1. Navigate over the profile view then press the qr code this will copy your address.
 
-  2. Then with google go to Alfajores Testnet Faucet and paste your address then press to send.
+  2. Then with google go to [Alfajores Testnet Faucet](https://celo.org/developers/faucet) and paste your address then press to send. This will send 1.0 Celo
 
   3. Press refresh on the app and watch balance be updated
 
@@ -96,7 +97,7 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 ### 📄 Smart Contract
 
-**Soon too come.**
+**Soon to come.**
 
 As of now the contract is deployed on Alfajores Testnet and the ABI is still the same.
 
@@ -111,17 +112,17 @@ As of now the contract is deployed on Alfajores Testnet and the ABI is still the
 
 ## Components
 
-Project consist of two components the App and Smart contract.
+Project consist of two components the iOS App and Smart contract.
 
 ### Smart Contract
 
-The smart contract has a DAO style architecture allowing groups, proposals and voting to take place and managed. This contract can easily be extended and is a good starting point.
+The smart contract has a DAO style architecture allowing groups, proposals and voting be created and managed. The contract can be easily extended and is a good starting point.
 
 ### Crypta iOS
 
 The app has a simplistic design that can be broken down into three sections services, contract and views.
 
-- Services: async methods and variables that piggy back on the web3swift library.
+- Services: variables and async methods that piggy back on the web3swift library.
 - Contract: variables that make up the contract, network and wallet.
 - Views:    swiftUI views and viewModels that make up the UI
 
@@ -176,7 +177,7 @@ func readContractMethod(method:ContractMethods,params:[AnyObject],completion:@es
 
 #### Contract
 
-Primarily consisting of files with hard coded strings used as building boxes that make up the contract. The most complex seems to be the contract `ABI`.
+Primarily consisting of files with hard coded strings used as building blocks that make up the contract. The most complex seems to be the contract `ABI`.
 
 #### ABI
 
@@ -304,6 +305,42 @@ Button("Create Proposal") {
 
 }
 ```
+
+# Future Improvements
+
+## iOS
+
+### Storing the keyStore to Apple’s Security Framework
+
+ Utilizing Apple’s Security Framework to store and request the `keystore` generated at login.
+
+### Using Web Sockets
+
+ Adding wss subscription listener for emitted events the contract generates. Also listening to balance changes.
+
+
+### DAO Group image
+
+Allow users to select and send the DAO Group Icon or Image. Images would be uploaded to IPFS and the generated url would be saved in the contract.
+
+
+### General Code readability and optimization
+
+Improve commits and optimization
+
+Make `views` more cookie cutter.
+
+## Contract
+
+### README
+
+Add quick setup for compiling, deploying and testing of the `DAO` contract.
+
+Creating flow and activity diagrams
+
+# Contributing
+
+ Know of a better way? I'm all ears! Just remember this project was created to be as cookie cutter as possible.
 
 # 🔖 Licence
 The project is available under [MIT licence](https://github.com/MitchTODO/Crypta/blob/main/LICENSE)
