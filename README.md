@@ -11,7 +11,7 @@
 
 # Crypta
 
-Crypta demonstrates how an native iOS app can create and manage components of a DAO (Decentralized Autonomous Organization). With the main propuse to be used as a reference, components are design to be plug and play with other contracts.
+Crypta is a reference app allowing easy integration between smart contracts and iOS apps. For demonstration the app manages a DAO smart contract hosted on the Alfajores Testnet.
 
 
 
@@ -104,9 +104,6 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
     You can now participate in create groups, proposals and voting.
 
-#### Integrate into your contract
-
-**Soon to come.**
 
 ----
 
