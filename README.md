@@ -11,7 +11,7 @@
 
 # Crypta
 
-Crypta is a reference app allowing easy integration between smart contracts and iOS apps. For demonstration the app manages a DAO smart contract hosted on the Alfajores Testnet.
+Crypta is a reference app allowing easy communication between smart contracts and iOS apps. For demonstration the app manages a DAO smart contract hosted on the Alfajores Testnet.
 
 
 
@@ -20,7 +20,6 @@ Crypta is a reference app allowing easy integration between smart contracts and 
   * [Requirements](#requirements)
   * [Quick Start](#quick-start)
     + [Crypta iOS App](#crypta-ios-app)
-        + [Integrate into your contract](#integrate-into-your-contract)
     + [Smart Contract](#smart-contract)
   * [Resources](#resources)
   * [Components](#components)
