@@ -3,19 +3,25 @@
 
 ![](https://img.shields.io/badge/platform-iOS-lightgray.svg?style=flat)
 ![Swift 5](https://img.shields.io/badge/Swift-5-orange.svg)
+![SwiftUI](https://img.shields.io/badge/Interface-SwiftUI-orange)
 ![web3](https://img.shields.io/badge/web3-support-blue.svg?style=flat)
 ![](https://img.shields.io/badge/Network-Celo-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
+
 # Crypta
-Native iOS Mobile Reference Application For Celo DAO/ReFi Management projects.
+
+Crypta demonstrates how an native iOS app can create and manage components of a DAO (Decentralized Autonomous Organization). With the main propuse to be used as a reference, components are design to be plug and play with other contracts.
+
+
 
 ---
   * [About](#about)
   * [Requirements](#requirements)
   * [Quick Start](#quick-start)
-    + [Crypta iOS App](#📲-crypta-ios-app)
-    + [ Smart Contract](#📄-smart-contract)
+    + [Crypta iOS App](#crypta-ios-app)
+        + [Integrate into your contract](#integrate-into-your-contract)
+    + [Smart Contract](#smart-contract)
   * [Resources](#resources)
   * [Components](#components)
     + [ Smart Contract](#smart-contract)
@@ -27,9 +33,8 @@ Native iOS Mobile Reference Application For Celo DAO/ReFi Management projects.
     * [Async Calls](#async-calls)
       + [task](#task)
       + [ViewModels](#viewmodels)
-  + [Future Improvements](#future-improvements)
   + [Contributing](contributing)
-  * [License](#🔖-licence)
+  * [Licence](#licence)
 
 ---
 
@@ -46,12 +51,10 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
     - Swift 5+
     - Cocoapods
 
-(Optional)
-- MetaMask
 
 # Quick Start
 
-### 📲 Crypta iOS App
+### Crypta iOS App
 
 1. Open your terminal and Git clone the repo
 
@@ -59,43 +62,55 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 2. Install Podfile
 
-   With the same terminal cd into Crypta2.0
+    - With the same terminal cd into Crypta2.0
 
-       cd Crypta2.0
+       cd Crypta/Crypta2.0
 
-  Install pods
+    - Install pods
 
        pod install
 
-   If your running on M1 chip use
+    ***If your running on M1 chip use***
 
        arch -x86_64 pod install
 
-   Wait for the pods to install
+    Wait for the pods to install
 
-3. Start Xcode and open up the workspace
+ 3. Start Xcode and open up the workspace
+     
+     - Launch Xcode and select Open a existing project then select the Crypta2.0 workspace
+     
+     ***Note: You might need to wait for Xcode to process files***
+     
+     - Build and launch the app
 
-    Build and launch the app
-
-4. Send Funds to the app
+ 4. Send Funds to the app
 
   ![](pics/logingif.gif)
 
-  When launching for the first time, you will be prompted to create a new password for your wallet. When completed you will be navigated to the `GroupsView`. You will need your password throughout the app to sign/send transactions.
+  When launching for the first time, you will need to create a new password to generate a wallet. When completed you will be navigated to the `GroupsView`. 
+  
+  *Note: You will need your password throughout the app to sign/send transactions.*
 
-  Before creating groups and voting you must add some liquidity to the app. This will be used to pay for the gas price associated with writing to the smart contract (ie creating managing groups, proposal and voting). Reading from the contract is free.
+  Before creating groups and voting you must add some liquidity to the app. This will be used to pay for the gas price associated with writing to the smart contract (ie creating managing groups, proposal and voting).
 
   1. Navigate over the profile view then press the qr code this will copy your address.
 
-  2. Then with google go to [Alfajores Testnet Faucet](https://celo.org/developers/faucet) and paste your address then press to send. This will send 1.0 Celo
+  2. Then with google go to [Alfajores Testnet Faucet](https://celo.org/developers/faucet) and paste your address; then press to send. This will send 1.0 in Celo,cUSD and cEUR.
 
-  3. Press refresh on the app and watch balance be updated
+  3. Press refresh on the app and watch balance be updated.
 
 5. Using the app
 
     You can now participate in create groups, proposals and voting.
 
-### 📄 Smart Contract
+#### Integrate into your contract
+
+**Soon to come.**
+
+----
+
+### Smart Contract
 
 **Soon to come.**
 
@@ -209,7 +224,7 @@ let contractABI =
 
 #### Contract Address
 
-When migrating a contract to a network was successful, it will output the contract address. This address is needed within the app.
+When contract migrating was successful, it will output the contract address. This address is needed within the app.
 
 ```swift
 // Crypta2.0/Contract/Address.swift
@@ -306,41 +321,10 @@ Button("Create Proposal") {
 }
 ```
 
-# Future Improvements
-
-## iOS
-
-### Storing the keyStore to Apple’s Security Framework
-
- Utilizing Apple’s Security Framework to store and request the `keystore` generated at login.
-
-### Using Web Sockets
-
- Adding wss subscription listener for emitted events the contract generates. Also listening to balance changes.
-
-
-### DAO Group image
-
-Allow users to select and send the DAO Group Icon or Image. Images would be uploaded to IPFS and the generated url would be saved in the contract.
-
-
-### General Code readability and optimization
-
-Improve commits and optimization
-
-Make `views` more cookie cutter.
-
-## Contract
-
-### README
-
-Add quick setup for compiling, deploying and testing of the `DAO` contract.
-
-Creating flow and activity diagrams
 
 # Contributing
 
  Know of a better way? I'm all ears! Just remember this project was created to be as cookie cutter as possible.
 
-# 🔖 Licence
+# Licence
 The project is available under [MIT licence](https://github.com/MitchTODO/Crypta/blob/main/LICENSE)
