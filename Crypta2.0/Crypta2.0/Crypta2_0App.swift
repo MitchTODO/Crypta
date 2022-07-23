@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct CryptaApp2_0App: App {
     @StateObject var authentication = Authentication()
-    
+
     var body: some Scene {
         WindowGroup {
             if authentication.isValidated {

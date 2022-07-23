@@ -147,7 +147,7 @@ struct GroupsView: View {
             contentVM.creationType = .group
         }
         .alert(item:$groupVM.error) { error in
-                Alert(title: Text("Failed to create new group."), message: Text(error.description), dismissButton: .cancel() {
+            Alert(title: Text(error.title), message: Text(error.description), dismissButton: .cancel() {
                     contentVM.sendingWriteTx = false
                 })
         }

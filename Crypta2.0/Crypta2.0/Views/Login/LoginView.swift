@@ -58,7 +58,9 @@ struct LoginView: View {
                     
                     Button(action: {
                         loginVM.login {success in
+                            // Update validation
                             authentication.updateValidation(success: success)
+                            
                         }
                         
                     }) {
@@ -78,7 +80,6 @@ struct LoginView: View {
                 .textFieldStyle(.roundedBorder)
                 .alert(item:$loginVM.error) { error in
                     Alert(title: Text("Invalid Login"), message: Text(error.localizedDescription), dismissButton: .cancel())
-                    
                 }
                 VStack {
                     LinearGradient(
@@ -106,13 +107,12 @@ struct LoginView: View {
                         .frame(width: nil, height: 20, alignment: .top)
                         .mask(
                             
-                            Text("Powered by the CELO network")
+                            Text("Sponsored by the CELO network")
                                 .font(.headline)
                                 .bold()
                             
                         )
                 }
-                
             }
         }
     }

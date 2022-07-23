@@ -24,8 +24,8 @@ class Web3Services {
     
     
     init(){
-        // Create wallet struct from keystore
-        let keystore = KeyStoreServices.shared.getKeyStore()!
+        let keystore = KeyStoreServices.shared.keystoreManager!
+  
         let name = "Crypta Wallet"
         let keyData = try! JSONEncoder().encode(keystore.keystoreParams)
         let address = keystore.addresses!.first!.address
@@ -42,104 +42,135 @@ class Web3Services {
         w3.addKeystoreManager(keystoreManager)
     }
     
+    
+    struct Web3ServiceError:Error,LocalizedError,Identifiable {
+        var id:String {description}
+        let title:String
+        let description:String
+    }
+    
+    
     // MARK: getWallet
-    // returns wallet struct
+    /// Returns wallet struct
     func getWallet() -> Wallet {
         return self.cryptaWallet
     }
     
-    // MARK: getTokenBalance
-    // Note: This function is kept for demo purposes.
-    /// This function can merge with readContractMethod, as it is a read tx
-    func getTokenBalance(token:ERC20Token, completion:@escaping(Result<String,Web3Error>) -> Void) {
-        DispatchQueue.global().async{ [unowned self] in
-            do{
-                let walletAddress = EthereumAddress(cryptaWallet.address)
-                let erc20ContractAddress = EthereumAddress(token.address)
-                let contract = w3.contract(Web3.Utils.erc20ABI, at: erc20ContractAddress, abiVersion: 2)!
-                var options = TransactionOptions.defaultOptions
-                options.from = walletAddress
-                options.gasPrice = .automatic
-                options.gasLimit = .automatic
-                let method = "balanceOf"
-                let tx = contract.read(
-                    method,
-                    parameters: [walletAddress] as [AnyObject],
-                    extraData: Data(),
-                    transactionOptions: options)!
-                let tokenBalance = try tx.call()
-                let balanceBigUInt = tokenBalance["0"] as! BigUInt
-                let balanceString = Web3.Utils.formatToEthereumUnits(balanceBigUInt, toUnits: .eth, decimals: 3)!
-                completion(.success(balanceString))
-            } catch {
-                completion(.failure(error as! Web3Error))
-            }
-        }
-    }
-    
+
     // MARK: readContractMethod
-    // Async method to read contract data
-    // This function is free to call unlike writeContractMethod
-    // PARAM:
-    // method: ContractMethods contract method to call (Only using the rawValue String)
-    // params: used for input for contract method
-    func readContractMethod(method:ContractMethods,params:[AnyObject],completion:@escaping(Result<[String:Any],Web3Error>) -> Void) {
+    /// Async method to read contract data.
+
+    /// - Note: Read data from contract is free unlike `writeContractMethod`.
+    /// - Parameter method: ContractMethods variable represents the contract method to call.
+    /// - Parameter parameters: parameters for contract method.
+    /// - Returns: Escaping result.
+    ///                 < Success: [String:Any], Failure: Web3Error >
+    ///
+    
+    func readContractMethod(method:ContractMethods,parameters:[AnyObject],completion:@escaping(Result<[String:Any],Web3Error>) -> Void) {
         DispatchQueue.global().async{ [unowned self] in
             do{
                 
-                let walletAddress = EthereumAddress(cryptaWallet.address)
+                let senderAddress = EthereumAddress(cryptaWallet.address)
                 let contractAddress = EthereumAddress(contractAddress)
-                let contractMethod = method.rawValue
                 
                 let extraData: Data = Data() // Extra data for contract method
                 let contract = w3.contract(contractABI, at: contractAddress, abiVersion: abiVersion)!
                 
                 var options = TransactionOptions.defaultOptions
                
-                options.from = walletAddress
+                options.from = senderAddress
                 options.gasPrice = .automatic
                 options.gasLimit = .automatic
                 
-                let tx = contract.read(contractMethod, parameters: params, extraData: extraData, transactionOptions: options)!
+                //
+                let tx = contract.read(method.rawValue,
+                                       parameters: parameters,
+                                       extraData: extraData,
+                                       transactionOptions: options)!
+                
                 
                 let result = try tx.call()
                 
                 completion(.success(result))
             }catch {
-                // Web3Error Type conforms to Error Type
+                completion(.failure(error as! Web3Error))
+            }
+        }
+    }
+    
+    // MARK: readContractMethod
+    /// Async method to read contract data.
+
+    /// - Note: Adjustable contract parameters work great for fetching token balances.
+    /// - Parameter contractAddress:String of contract address.
+    /// - Parameter contractABI: String of contract abi.
+    /// - Parameter method: String of contract method to call (Must match contract ABI)
+    /// - Parameter parameters: List of AnyObject's used for parameters of contract method .
+    /// - Returns: Escaping result.
+    ///                 < Success: [String:Any], Failure: Web3Error >
+    ///
+    func readContractMethod(contractAddress:String, contractABI:String, method:String,parameters:[AnyObject],completion:@escaping(Result<[String:Any],Web3Error>) -> Void) {
+        DispatchQueue.global().async{ [unowned self] in
+            do{
+                
+                let senderAddress = EthereumAddress(cryptaWallet.address)
+                let contractAddress = EthereumAddress(contractAddress)
+                
+                let extraData: Data = Data() // Extra data for contract method
+                let contract = w3.contract(contractABI, at: contractAddress, abiVersion: abiVersion)!
+                
+                var options = TransactionOptions.defaultOptions
+               
+                options.from = senderAddress
+                options.gasPrice = .automatic
+                options.gasLimit = .automatic
+                
+                let tx = contract.read(method,
+                                       parameters: parameters,
+                                       extraData: extraData,
+                                       transactionOptions: options)!
+                
+                let result = try tx.call()
+                
+                completion(.success(result))
+            }catch {
                 completion(.failure(error as! Web3Error))
             }
         }
     }
     
     // MARK: writeContractMethod
-    // Called when data is being written to the contract or on chain
-    // This requires keystore password as the tx need to be signed by the private key
-    // PARAMS:
-    // method: ContractMethods enum, contract method to call (Using the rawValue String)
-    // params: list of Any objects used for input for contract method
-    // password: string password that was used to create the keystore (ie encrypt the privatekey)
-    func writeContractMethod(method:ContractMethods,params:[AnyObject],password:String,completion:@escaping(Result<TransactionSendingResult,Web3Error>) -> Void) {
+    /// Async method to write contract data  // Called when data is being written to the contract or on chain
+    ///
+    /// - Note: This requires keystore password as the tx need to be signed by the private key
+    /// - Parameter method: ContractMethods enum, contract method to call (Using the rawValue String)
+    /// - Parameter parameters:list of Any objects used for input for contract method
+    /// - Parameter password: String password that was used to create the keystore (ie encrypt the privatekey)
+    /// - Returns: Escaping Result.
+    ///                     <Success: TransactionSendingResult, Failure: Web3Error>
+    ///
+    func writeContractMethod(method:ContractMethods,parameters:[AnyObject],password:String,completion:@escaping(Result<TransactionSendingResult,Web3Error>) -> Void) {
         DispatchQueue.global().async{ [unowned self] in
             do{
                 
-                let walletAddress = EthereumAddress(cryptaWallet.address)
+                let senderAddress = EthereumAddress(cryptaWallet.address)
                 let contractAddress = EthereumAddress(contractAddress)
-                let contractMethod = method.rawValue
+
                 // if your contract method is payable then you can also send value
                 //let amount = Web3.Utils.parseToBigUInt(value, units: .eth)
                 let extraData: Data = Data() // Extra data for contract method
                 let contract = w3.contract(contractABI, at: contractAddress, abiVersion: abiVersion)!
                 
                 var options = TransactionOptions.defaultOptions
-                //options.value = amount
-                options.from = walletAddress
+                //options.value = amount // Only needed if sending native coin not token
+                options.from = senderAddress
                 options.gasPrice = .automatic
                 options.gasLimit = .automatic
                 
                 let tx = contract.write(
-                    contractMethod,
-                    parameters: params,
+                    method.rawValue,
+                    parameters: parameters,
                     extraData: extraData,
                     transactionOptions: options)!
                 
@@ -152,34 +183,42 @@ class Web3Services {
         }
     }
     
-    // MARK: sendTokens
-    // Async method Sends erc20 compliant tokens like CELO
-    // PARAMS
-    // token: token object contains relivate info to send
-    // value: amount of tokens to send in wei base 18
-    // to: String address the reciver of the token
-    // password: string password of senders keystore 
-    func sendTokens(token:ERC20Token,value:String,to:String,password:String,completion:@escaping(Result<TransactionSendingResult,Web3Error>) -> Void) {
+    // MARK: writeContractMethod
+    /// Async method to write contract data
+    ///
+    ///
+    /// - Note: This requires keystore (Wallet) password as the tx need to be signed by the private key
+    /// - Parameter contractAddress:String of contract address.
+    /// - Parameter contractABI: String of contract abi.
+    /// - Parameter method: String of contract method to call (Must match contract ABI)
+    /// - Parameter parameters:list of Any objects used for input for contract method
+    /// - Parameter password: String password that was used to create the keystore (ie encrypt the privatekey)
+    /// - Returns: Escaping Result.
+    ///                     <Success: TransactionSendingResult, Failure: Web3Error>
+    ///
+    func writeContractMethod(contractAddress:String,contractABI:String,method:String,parameters:[AnyObject],password:String,completion:@escaping(Result<TransactionSendingResult,Web3Error>) -> Void) {
         DispatchQueue.global().async{ [unowned self] in
             do{
-                let walletAddress = EthereumAddress(cryptaWallet.address) // your wallet
-                let toAddress = EthereumAddress(to)!
                 
-                let erc20ContractAddress = EthereumAddress(token.address)!
-                let contract = w3.contract(Web3.Utils.erc20ABI, at: erc20ContractAddress, abiVersion: 2)!
-                let amount = Web3.Utils.parseToBigUInt(value, units: .eth)
+                let senderAddress = EthereumAddress(cryptaWallet.address)
+                let contractAddress = EthereumAddress(contractAddress)
+
+                // if your contract method is payable then you can also send value
+                //let amount = Web3.Utils.parseToBigUInt(value, units: .eth)
+                let extraData: Data = Data() // Extra data for contract method
+                let contract = w3.contract(contractABI, at: contractAddress, abiVersion: abiVersion)!
+                
                 var options = TransactionOptions.defaultOptions
-                //options.value = amount
-                options.from = walletAddress
+                options.from = senderAddress
                 options.gasPrice = .automatic
                 options.gasLimit = .automatic
                 
-                let method = "transfer"
                 let tx = contract.write(
                     method,
-                    parameters: [toAddress, amount] as [AnyObject],
-                    extraData: Data(),
+                    parameters: parameters,
+                    extraData: extraData,
                     transactionOptions: options)!
+                
                 let result = try tx.send(password: password)
                 completion(.success(result))
             }catch {
@@ -188,7 +227,5 @@ class Web3Services {
             }
         }
     }
-    
-    
     
 }

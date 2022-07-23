@@ -22,7 +22,7 @@ class ProfileViewModel:ObservableObject {
 
     @Published var lastTx:WriteTransaction?
     @Published var txParams:TxParams = TxParams()
-    @Published var error:CryptaError?
+    @Published var error:Web3Services.Web3ServiceError?
     @Published var showProgress = false
     
     private let context = CIContext()
@@ -47,8 +47,11 @@ class ProfileViewModel:ObservableObject {
     func sendToken(to:String,value:String,password:String,token:ERC20Token,completion:@escaping(TransactionSendingResult) -> Void) {
         
         showProgress = true
-        
-        Web3Services.shared.sendTokens(token: token, value: value, to: to, password: password) {
+
+        let amount = Web3.Utils.parseToBigUInt(value, units: .eth)
+
+        let params = [to,amount] as [AnyObject]
+        Web3Services.shared.writeContractMethod(contractAddress:token.address, contractABI:  Web3.Utils.erc20ABI, method: "transfer", parameters: params, password: password) {
             result in
             DispatchQueue.main.async { [unowned self] in
                 showProgress = false
@@ -56,10 +59,10 @@ class ProfileViewModel:ObservableObject {
                 case .success(let tx):
                     completion(tx)
                 case .failure(let txError):
-                    self.error = CryptaError(description: txError.errorDescription)
-                    
+                    self.error = Web3Services.Web3ServiceError(title: "Failed to send tokens.", description: txError.errorDescription)
                 }
             }
         }
+
     }    
 }

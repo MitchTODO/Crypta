@@ -15,6 +15,7 @@ contract Dao {
 
     struct Proposal {
       uint256 id;
+      uint256 groupId;
       string title;
       string description;
       address creator;
@@ -50,10 +51,11 @@ contract Dao {
     uint256 public groupIdTracker = 0;
 
     /********************** Events ***********************/
-    event GroupCreated(uint256);
+
     event GroupActivated(uint256);
     event GroupDisabled(uint256);
-    event ProposalCreated(uint256,Proposal);
+    event ProposalCreated(uint256,uint256);
+    event GroupCreated(uint256);
 
     /********************** Modifiers ***********************/
 
@@ -117,29 +119,30 @@ contract Dao {
     /********************** Proposal Functions ***********************/
     // Proposals cannot be removed or delete
 
-    function createProposal(uint256 groupId,string memory _title, string memory _description, uint256 _proposalStart, uint256 _proposalEnd, Choice[] memory _choices)
+    function createProposal(uint256 _groupId,string memory _title, string memory _description, uint256 _proposalStart, uint256 _proposalEnd, Choice[] memory _choices)
     public
-    groupExist(groupId) // Check if groups exist
+    groupExist(_groupId) // Check if groups exist
     {
       require(_proposalStart < _proposalEnd,"Check poll start time.");
       require(_choices.length < 5, "Too many choices, Contract is limited to 5 choices per proposal.");
-      Proposal memory eve;
-      eve.id = groups[groupId].proposalCount; // set Proposal id to group ProposalCount
-      groups[groupId].proposalCount++; // increase proposal counter within group
-      groupArray[groupId] = groups[groupId]; // Update group in groupArray
-      eve.title = _title;
-      eve.description = _description;
-      eve.creator = msg.sender;
-      eve.proposalEnd = _proposalEnd;
-      eve.proposalStart = _proposalStart;
+      Proposal memory newProposal;
+      newProposal.id = groups[_groupId].proposalCount; // set Proposal id to group ProposalCount
+      groups[_groupId].proposalCount++; // increase proposal counter within group
+      groupArray[_groupId] = groups[_groupId]; // Update group in groupArray
 
-      proposals[groupId].push(eve);
+      newProposal.title = _title;
+      newProposal.description = _description;
+      newProposal.creator = msg.sender;
+      newProposal.proposalEnd = _proposalEnd;
+      newProposal.proposalStart = _proposalStart;
+      newProposal.groupId = _groupId;
+      proposals[_groupId].push(newProposal);
 
       for (uint i = 0; i < _choices.length; i++) {
-        choices[groupId][eve.id].push(_choices[i]);
+        choices[_groupId][newProposal.id].push(_choices[i]);
       }
 
-      emit ProposalCreated(groupId,eve);
+      emit ProposalCreated(_groupId,newProposal.id);
     }
   // [[0,"1"],[0,"2"],[0,"3"]]
     function getProposalCount(uint256 groupId) public view
