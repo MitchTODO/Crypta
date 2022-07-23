@@ -20,14 +20,14 @@ Crypta is a reference iOS app allowing for en easy integration into web3 project
   * [Quick Start](#quick-start)
   * [Integration into another contract](#integration-into-another-contract)
     + [Components](#components)
-    + [Setting up contract, network and tokens variables](#setting-up-contract,-network-and-tokens-variables)
+    + [Setting up contract, network and tokens variables](#setting-up-contract-network-and-tokens-variables)
         + [Contract Address](#contract-address)
         + [Contract ABI](#contract-abi)
         + [Network](#network)
-        + [Contract Methods | optional](#contract-methods-|-optional)
-        + [Contract Events | optional](#contract-events-|-optional)
-        + [Tokens | optional](#tokens-|-optional)
-    + [Views](#2.-view-setup)
+        + [Contract Methods | optional](#contract-methods)
+        + [Contract Logs | optional](#contract-logs)
+        + [Tokens | optional](#tokens)
+    + [Views](views)
         * [Async Calls](#async-calls)
           + [task](#task)
           + [ViewModels](#viewmodels)
@@ -95,7 +95,7 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
   3. Press refresh on the app and watch balance be updated.
 
-    ![](pics/logingif.gif)
+![](pics/logingif.gif)
 
 **5.** Using the app
 
@@ -191,7 +191,9 @@ let alfajoresTestnet = Network(chainId: BigUInt(44787) , rpcEndpoint: "https://a
 let alfajoresTestnetSocket = "wss://alfajores-forno.celo-testnet.org/ws"
 ```
 
-#### Contract Methods | optional
+#### Contract Methods
+
+**Optional**
 
 Enum containing strings of all callable methods within the contract. This will make it easier when calling contract methods.
 
@@ -218,7 +220,9 @@ enum ContractMethods:String {
 }
 ```
 
-#### Contract Logs | optional
+#### Contract Logs
+
+**Optional**
 
 Enum containing log topics emitted from the contract. Used in `WebSockets` to id the events.
 
@@ -235,7 +239,9 @@ enum Topics:String {
 Easy way to get topics is to used https://remix.ethereum.org/ and look at the log within the transaction.
 ![Log Pic](pics/logs.png)
 
-#### Tokens | optional
+#### Tokens
+
+**Optional**
 
 Tokens that will be sent from the app. Only needed if you are planing to send/receive tokens. Important part is the token address and amount of decimals.
 
@@ -296,10 +302,7 @@ More complex, but works with order versions and storyboard.
 ```swift
 // Crypta2.0/Views/ProposalViewModel.swift
 func createProposal(groupId:BigUInt,proposal:Proposal,choiceOne:String,choiceTwo:String ,password:String, completion:@escaping(TransactionSendingResult) -> Void){
-    showProgress = true
-    // create params for contract method
-    let startTime = Int(proposal.proposalStart)
-    let endTime = Int(proposal.proposalEnd)
+
     let params = [groupId,proposal.title,proposal.description,startTime,endTime,[[0,choiceOne],[0,choiceTwo]]] as [AnyObject]
     // Make call with shared instance
     Web3Services.shared.writeContractMethod(method: .createProposal, params: params, password:password ) {
@@ -309,42 +312,14 @@ func createProposal(groupId:BigUInt,proposal:Proposal,choiceOne:String,choiceTwo
             showProgress = false
             switch(result) {
             case .success(let tx):
-                // Tx was successful, update proposal and add to proposals
-                var proposal = proposal
-                proposal.id = BigUInt(proposals.count)
-                proposal.vote = Vote(hasVoted: false, indexChoice: BigUInt(0))
-                proposals.append(proposal)
                 completion(tx)
             case .failure(let txError):
-                print(txError)
-                self.error = CryptaError(description: txError.errorDescription)
+                self.error = Error(description: txError.errorDescription)
             }
         }
     }
 }
 
-// Crypta2.0/Views/ProposalView.swift
-
-Button("Create Proposal") {
-  contentVM.sendingWriteTx = true
-   contentVM.popOverProposal = false
-
-   // Call and wait for successful tx
-   // Error is handled back in view model
-   proposalVM.createProposal(groupId: selectedGroup.id!, proposal: newProposal, choiceOne: choiceOne, choiceTwo: choiceTwo, password: password) { success in
-       // reset proposal object
-       newProposal = Proposal()
-       choiceOne = ""
-       choiceTwo = ""
-
-       selectedGroup.proposalCount! += 1
-       // Get ready to show tx
-       contentVM.txToShow = success
-       contentVM.showPopOverForTx = true
-       contentVM.sendingWriteTx = false
-   }
-
-}
 ```
 
 ## WebSockets
