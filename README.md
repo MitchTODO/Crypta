@@ -71,7 +71,7 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
         arch -x86_64 pod install
 
-  Wait for the pods to install
+    Wait for the pods to install
 
 **3.** Start Xcode and open up the workspace
 
@@ -83,7 +83,7 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 
 **4.** Send Funds to the app
 
-  When launching for the first time, you will need to create a new password to generate a wallet. When completed you will be navigated to the `GroupsView`.
+   When launching for the first time, you will be prompted to create a new password. The password will be used to generate a wallet. When completed you will be navigated to the `GroupsView`.
 
    *Note: You will need your password throughout the app to sign/send transactions.*
 
@@ -129,8 +129,8 @@ App has a simplistic and cookie cutter design that can be broken down into three
 ### Setting up contract, network and tokens variables
 
 #### Contract Address
-
-  When a contract deployment was successful, it will output the contract address.
+  
+  When a contract deployment was successful, it will output the contract address. 
 
   ```swift
   // Crypta2.0/Contract/Address.swift
@@ -255,21 +255,21 @@ let cREAL = ERC20Token(name: "REAL", address: "0xC5375c73a627105eb4DF00867717F6e
 
 ```
 ---
-### Views
+## Views
 
 Depending on what you are building the UI will be different.
 
-Here is the view hierarchy / Flow diagram, try to find what you need and start from there.
-e
+Here is the view hierarchy / Flow diagram, try to find what you need and start from there.I recommend building within the contentView. As this is where you end up after a successful login.
+
+Check out Stewart video on the loginView https://www.youtube.com/watch?v=QrTChgzseVk&ab_channel=StewartLynch
+
 ![Log Pic](pics/cryptaDiagram.png)
 
 
-I recommend building within the contentView. As this is where you end up after a successful login.
-Check out Stewart video on the loginView https://www.youtube.com/watch?v=QrTChgzseVk&ab_channel=StewartLynch
 
 ### Async Calls
 
-Calling a contract method from views. Here are two different ways.
+Calling a contract method from views. Here are two different examples.
 
 #### task
 
@@ -326,6 +326,7 @@ func createProposal(groupId:BigUInt,proposal:Proposal,choiceOne:String,choiceTwo
 
 WebSockets is still a work in progress and changes will need to be done in the `handleEvent` function. Currently it updates two published variables. `BannerView` is binded to the variables and displayed when a new event received.
 
+***Note: The Web3swfit library is very limited when it comes to encoding/decoding log data.***
 
 ```swift
 
@@ -342,28 +343,15 @@ var body: some View {
 // MARK: handleEvent
 /// TODO: Decode the log data
 func handleEvent(message:SocketMessage) {
-
-    /// hex identifier 0x
-    //let hexString = jsonMessage.params.result.data.dropFirst(2)
-    //let arrayHex = Array(hexString)
-    /// First 64 bytes are groupId
-    //let groupIdRange: ClosedRange = 0...63
-
+    
     // Using topic to id the event type
     switch(message.params.result.topics.first) {
 
     case Topics.newProposal.rawValue:
-
-        //let idRange: ClosedRange = 64...127
-        //let groupId = BigUInt(String(arrayHex[groupIdRange]))
-        //let id = BigUInt(String(arrayHex[idRange]))
-
-        newEvent = true
+        newEvent = true // Only toggle if we know the event 
         eventTitle = "A new proposal has been created."
 
     case Topics.newGroup.rawValue:
-        //let groupId = BigUInt(String(arrayHex[groupIdRange]))
-
         newEvent = true
         eventTitle = "A new group has been created."
     default:
