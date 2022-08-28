@@ -193,7 +193,7 @@ let alfajoresTestnetSocket = "wss://alfajores-forno.celo-testnet.org/ws"
 
 #### Contract Methods
 
-**Optional**
+***Optional***
 
 Enum containing strings of all callable methods within the contract. This will make it easier when calling contract methods.
 
@@ -222,7 +222,7 @@ enum ContractMethods:String {
 
 #### Contract Logs
 
-**Optional**
+***Optional***
 
 Enum containing log topics emitted from the contract. Used in `WebSockets` to id the events.
 
@@ -241,9 +241,9 @@ Easy way to get topics is to used https://remix.ethereum.org/ and look at the lo
 
 #### Tokens
 
-**Optional**
+***Optional***
 
-Tokens that will be sent from the app. Only needed if you are planing to send/receive tokens. Important part is the token address and amount of decimals.
+Tokens that will be sent from the app. Only needed if you are planning to send/receive tokens. Important part is the token address and amount of decimals.
 
 ```swift
 // Crypta2.0/Contract/Tokens.swift
