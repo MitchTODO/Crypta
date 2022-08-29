@@ -16,7 +16,7 @@ class GroupViewModel:ObservableObject {
     @Published var amountOfGroups:BigUInt?
     @Published var groups:[Group] = []
     
-    @Published var error:CryptaError?
+    @Published var error:Web3Services.Web3ServiceError?
     
     @Published var showProgress = false
     
@@ -36,7 +36,8 @@ class GroupViewModel:ObservableObject {
         showProgress = true
         
         let params = [group.name,group.description,group.image] as [AnyObject]
-        Web3Services.shared.writeContractMethod(method: .newGroup, params: params, password: password) {
+        //(method: .newGroup, params: params, password: password)
+        Web3Services.shared.writeContractMethod(method:.newGroup, parameters: params, password: password){
             result in
             // Update UI on main thread
             DispatchQueue.main.async { [unowned self] in
@@ -50,8 +51,8 @@ class GroupViewModel:ObservableObject {
                     
                     completion(tx)
                 case .failure(let txError):
-                    self.error = CryptaError(description: txError.errorDescription)
-                    
+                    // if web3Error use txError.errorDescription
+                    self.error = Web3Services.Web3ServiceError(title: "Failed to create group.", description: txError.errorDescription)
                 }
             }
         }
@@ -61,7 +62,8 @@ class GroupViewModel:ObservableObject {
     func groupAmount() {
         showProgress = true
         let params = [] as [AnyObject]
-        Web3Services.shared.readContractMethod(method: .groupIdTracker, params:params) {
+
+        Web3Services.shared.readContractMethod( method: .groupIdTracker, parameters: params){
             
             result in
             DispatchQueue.main.async { [unowned self] in
@@ -75,11 +77,10 @@ class GroupViewModel:ObservableObject {
                     fetchGroups()
                 case .failure(let error):
                     
-                    self.error = CryptaError(description: error.errorDescription)
+                    self.error = Web3Services.Web3ServiceError(title: "Failed to get group amount.", description: error.errorDescription)
                 }
             }
         }
-        
     }
     
     // MARK: fetchGroups
@@ -98,8 +99,8 @@ class GroupViewModel:ObservableObject {
         }
    
         let params = [0, amountOfGroups] as [AnyObject]
-        
-        Web3Services.shared.readContractMethod(method: .getGroup, params: params) {
+
+        Web3Services.shared.readContractMethod(method: .getGroup, parameters: params) {
             result in
             DispatchQueue.main.async { [unowned self] in
                 showProgress = false
@@ -132,8 +133,8 @@ class GroupViewModel:ObservableObject {
                     groups.append(contentsOf: allGroups)
                     
                 case .failure(let error):
-                    self.error = CryptaError(description: error.errorDescription)
-                    //print("Failed to fetch groups \(error.errorDescription)")
+                    self.error = Web3Services.Web3ServiceError(title: "Failed to get groups.", description: error.errorDescription)
+    
                 }
                 
             }

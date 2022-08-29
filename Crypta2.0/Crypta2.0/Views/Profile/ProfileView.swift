@@ -163,11 +163,11 @@ struct ProfileView: View {
                            .zIndex(1)
                            
             }
+        }
         }.alert(item:$profileVM.error) { error in
-            Alert(title: Text("Failed to send tokens."), message: Text(error.description), dismissButton: .cancel() {
+            Alert(title: Text(error.title), message: Text(error.description), dismissButton: .cancel() {
                 contentVM.sendingWriteTx = false
             })
-        }
         }
     }
 }

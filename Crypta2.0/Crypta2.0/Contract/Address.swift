@@ -8,5 +8,8 @@
 import Foundation
 
 // DAO contract address uploaded to testnet
-let contractAddress = "0xa83453C7fB2D22EbA5d87080C76Ba8fb810349f5"
+let contractAddress = "0xBF27b48c9Cc931A40Dfa995C71D4769215C0b3a3"
+
+
+
 

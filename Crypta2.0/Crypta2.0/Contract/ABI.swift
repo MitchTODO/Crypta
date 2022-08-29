@@ -10,13 +10,13 @@ import Foundation
 // Abi version
 let abiVersion = 2
 
-// Keep triple quots
+// Keep triple quotes
 /*
 Note:
     This is the contract abi taken from Dao.json within the build directory of the truffle file.
     Needed to build web3swift.web3 object
     
-    Look at Methods file for callable methods this is too messy
+    Look at Methods file for callable methods
  */
 // MARK: contractABI
 let contractABI =
@@ -71,42 +71,10 @@ let contractABI =
           "type": "uint256"
         },
         {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "id",
-              "type": "uint256"
-            },
-            {
-              "internalType": "string",
-              "name": "title",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "description",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "creator",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "proposalStart",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "proposalEnd",
-              "type": "uint256"
-            }
-          ],
           "indexed": false,
-          "internalType": "struct Dao.Proposal",
+          "internalType": "uint256",
           "name": "",
-          "type": "tuple"
+          "type": "uint256"
         }
       ],
       "name": "ProposalCreated",
@@ -180,7 +148,7 @@ let contractABI =
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "groupId",
+          "name": "_groupId",
           "type": "uint256"
         },
         {
@@ -274,6 +242,11 @@ let contractABI =
               "type": "uint256"
             },
             {
+              "internalType": "uint256",
+              "name": "groupId",
+              "type": "uint256"
+            },
+            {
               "internalType": "string",
               "name": "title",
               "type": "string"
@@ -345,6 +318,11 @@ let contractABI =
             {
               "internalType": "uint256",
               "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "groupId",
               "type": "uint256"
             },
             {

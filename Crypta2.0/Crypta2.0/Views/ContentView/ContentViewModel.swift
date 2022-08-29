@@ -13,6 +13,7 @@ class ContentViewModel:ObservableObject {
     
     @Published var credentials = Credentials()
     
+    
     @Published var showPopOverForTx = false
     @Published var txToShow:TransactionSendingResult?
     

@@ -11,7 +11,7 @@ import Foundation
  Note:
  Had my contract open along side Xcode to create enum with contract methods.
  If your not sure what methods are callable copy and paste your contract into https://remix.ethereum.org/
- Method string MUST match the contract ABI
+ Method name MUST match the method in the contract ABI
  */
 
 enum ContractMethods:String {
@@ -31,6 +31,6 @@ enum ContractMethods:String {
     case getGroup = "getGroup"
     case disableGroup = "disableGroup"
     case activateGroup = "activateGroup"
-    // This is a public varable not method but still callable
+    // This is a public variable not method but still callable
     case groupIdTracker = "groupIdTracker"
 }

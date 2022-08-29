@@ -50,21 +50,21 @@ struct ProposalsView: View {
                         .truncationMode(.middle)
                         .lineLimit(1)
                     
-                    // abandoned feature out of time
+                    // Disable/Enable a group
                     //contentVM.checkIfCreator(address: selectedGroup.creator!)
-                    if(false){
-                        HStack{
-                        TextField("Password",text: $password)
-                            Button("Disable Group") {
-                                if(password.isEmpty){return}
-                                proposalVM.removeGroup(groupId: selectedGroup.id!,password: password) { success in
-                                    contentVM.txToShow = success
-                                    contentVM.showPopOverForTx = true
-                                    contentVM.sendingWriteTx = false
-                                }
-                            }.buttonStyle(BorderedButtonStyle())
-                        }
-                    }
+                    //if(false){
+                    //    HStack{
+                    //    TextField("Password",text: $password)
+                    //        Button("Disable Group") {
+                    //            if(password.isEmpty){return}
+                    //            proposalVM.removeGroup(groupId: selectedGroup.id!,password: password) { success in
+                    //                contentVM.txToShow = success
+                    //                contentVM.showPopOverForTx = true
+                    //                contentVM.sendingWriteTx = false
+                    //            }
+                    //        }.buttonStyle(BorderedButtonStyle())
+                    //    }
+                    //}
                 }
             }
             
@@ -73,7 +73,7 @@ struct ProposalsView: View {
                 NavigationView {
                     List(proposalVM.proposals,id: \.id) { proposal in
                         NavigationLink(
-                            destination: PollView(groupId: selectedGroup.id!, proposal: proposal, selection: proposal.vote!.hasVoted ? Int(proposal.vote!.indexChoice) : nil ).environmentObject(proposalVM),
+                            destination: VoteView(groupId: selectedGroup.id!, proposal: proposal, selection: proposal.vote!.hasVoted ? Int(proposal.vote!.indexChoice) : nil ).environmentObject(proposalVM),
                             label: {
                                 if proposal.vote!.hasVoted {
                                     Image(systemName: "checkmark.circle")
@@ -188,7 +188,7 @@ struct ProposalsView: View {
         }
         
         .alert(item:$proposalVM.error) { error in
-                Alert(title: Text("Failed to create new group."), message: Text(error.description), dismissButton: .cancel() {
+            Alert(title: Text(error.title), message: Text(error.description), dismissButton: .cancel() {
                     contentVM.sendingWriteTx = false
                 })
         }
@@ -200,8 +200,7 @@ struct ProposalsView: View {
                     destination: ProfileView().environmentObject(contentVM),
                     label: {
                         VStack{
-                            Image(systemName: "creditcard")
-                            //Text("Wallet")
+                            Image(systemName: "person.crop.circle")
                         }
                     })
             }
