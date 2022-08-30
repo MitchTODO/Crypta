@@ -181,7 +181,7 @@ For web sockets paste the wss url.
 
 
 ```swift
-// Crypta2.0/Contract/ABI.swift
+// Crypta2.0/Contract/Network.swift
 // Add your networks
 let yourNet = Network(chainId: BigUInt(<Your ChainId>),rpcEndpoint: <"Your RPC endpoint">)
 let webSocketURI = "<uri>"
