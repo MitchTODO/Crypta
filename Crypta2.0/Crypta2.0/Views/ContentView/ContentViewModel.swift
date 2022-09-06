@@ -13,7 +13,6 @@ class ContentViewModel:ObservableObject {
     
     @Published var credentials = Credentials()
     
-    
     @Published var showPopOverForTx = false
     @Published var txToShow:TransactionSendingResult?
     
@@ -23,6 +22,9 @@ class ContentViewModel:ObservableObject {
     @Published var isCreating = false
     @Published var creationType:CreationType = .group
     
+    // Update group if content changes
+    @Published var contentChangedForGroup:Group?
+    
     @Published var popOverProposal = false
     @Published var popOverGroup = false
     
@@ -31,9 +33,4 @@ class ContentViewModel:ObservableObject {
         return(Web3Services.shared.getWallet().address == address.address)
     }
 
-    
-
-       
-    
-    
 }

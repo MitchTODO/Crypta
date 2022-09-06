@@ -17,14 +17,14 @@ struct LoginView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
-            VStack(alignment: .center, spacing: 100){
+            VStack(alignment: .center){
                 
                 LinearGradient(
                     colors: [.green, .red, .yellow, .blue, .purple],
                     startPoint: .leading,
                     endPoint: .trailing
                 )
-                    .frame(width: nil, height: 100, alignment: .top)
+                    .frame(width: nil, alignment: .top)
                     .mask(
                         VStack{
                             Text("Crypta")
@@ -37,9 +37,13 @@ struct LoginView: View {
                                 .padding(.bottom)
                         }
                     )
-                VStack(spacing: 10) {
+                VStack(spacing: 20) {
                     if(!loginVM.hasKeyStore){
                         Text("Welcome, you must first create a wallet.").font(.title3)
+                    }
+                    
+                    if(loginVM.showProgressView){
+                        ProgressView()
                     }
                     
                     VStack(alignment: .leading,spacing: 10){
@@ -49,29 +53,72 @@ struct LoginView: View {
                             .bold()
                         TextField("",text: $loginVM.credentials.password)
                         
-                        
                     }.padding([.leading, .trailing], 20)
-                    if loginVM.showProgressView {
-                        ProgressView().background(.white)
-                    }
                     
                     
-                    Button(action: {
-                        loginVM.login {success in
-                            // Update validation
-                            authentication.updateValidation(success: success)
-                            
-                        }
+                    
+                    if(!loginVM.mnemonics.isEmpty){
                         
-                    }) {
-                        Text(loginVM.hasKeyStore ? "Log in" : "Create new wallet")
+                        VStack(alignment: .leading,spacing: 20){
+                            
+                            Text("Mnemonics")
+                                .font(.subheadline)
+                                .bold()
+                            
+                            Text("Write down your new password and recovery phase.")
+                                .frame(height: 50)
+                                .font(.body)
+                            
+                            Text(loginVM.mnemonics)
+                                .bold()
+                                .lineSpacing(10)
+                                .frame(height: 160)
+                                .padding([.horizontal], 4)
+                                .cornerRadius(5)
+                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.gray))
+                             
+                        }.padding([.leading, .trailing], 20)
+                        
+                        Text("This will be the last time this will be shown.")
+                            .bold()
                             .frame(minWidth: 0, maxWidth: .infinity)
-                            .frame(height: 30)
                             .cornerRadius(40)
-                    }
-                    .padding([.leading, .trailing], 100)
-                   
+                        
+                        Button(action: {
+                            authentication.updateValidation(success: true)
+                            
+                        }){
+                            Text("I understand")
+                                .frame(minWidth: 0, maxWidth: .infinity)
+                                .frame(height: 30)
+                                .cornerRadius(40)
+                                
+                        }.buttonStyle(.borderedProminent)
+                        .padding([.leading, .trailing], 20)
+                        
+                    }else{
+                        if(!loginVM.showProgressView) {
+                            
+                            Button(action: {
+                                loginVM.showProgressView = true
+                                loginVM.login {success in
+                                    print(success)
+                                    // Update validation
+                                    if loginVM.hasKeyStore {
+                                        authentication.updateValidation(success: success)
+                                    }
+                                }
+                                
+                            }) {
+                                Text(loginVM.hasKeyStore ? "Login" : "Create new wallet")
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    .frame(height: 30)
+                                    .cornerRadius(40)
+                            }
+                            .padding([.leading, .trailing], 100)
+                        }
                     
+                    }
                     Spacer()
                     
                 }

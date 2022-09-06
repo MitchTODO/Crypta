@@ -17,6 +17,7 @@ struct GroupsView: View {
     
     @State var newGroup = Group()
     @State var password = ""
+    
 
     var body: some View {
         
@@ -71,8 +72,6 @@ struct GroupsView: View {
                     }
 
                 
-                
-                // Move to other file
                 .popover(isPresented:  $contentVM.popOverGroup){
                     
                     VStack(alignment: .center, spacing: 20){
@@ -122,11 +121,12 @@ struct GroupsView: View {
                             contentVM.sendingWriteTx = true // disable list and navibar add
                             contentVM.popOverGroup = false // dimiss popOver
                             
+                            // Call create group method in groupViewModel
                             groupVM.createGroup(group: newGroup, password: password) { success in
                                 contentVM.txToShow = success
                                 contentVM.showPopOverForTx = true
                                 contentVM.sendingWriteTx = false
-                                print(success)
+                                password = ""
                             }
                             
                         }.buttonStyle(.borderedProminent)
@@ -145,10 +145,17 @@ struct GroupsView: View {
         }
         .onAppear{
             contentVM.creationType = .group
+            // Update group if group content changed
+            if(contentVM.contentChangedForGroup != nil) {
+                let index = Int(contentVM.contentChangedForGroup!.id!)
+                groupVM.groups[index] = contentVM.contentChangedForGroup!
+                contentVM.contentChangedForGroup = nil
+            }
         }
         .alert(item:$groupVM.error) { error in
             Alert(title: Text(error.title), message: Text(error.description), dismissButton: .cancel() {
                     contentVM.sendingWriteTx = false
+                    password = ""
                 })
         }
     }

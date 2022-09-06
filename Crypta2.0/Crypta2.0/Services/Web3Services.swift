@@ -59,10 +59,13 @@ class Web3Services {
 
     // MARK: readContractMethod
     /// Async method to read contract data.
-
+    ///
     /// - Note: Read data from contract is free unlike `writeContractMethod`.
-    /// - Parameter method: ContractMethods variable represents the contract method to call.
-    /// - Parameter parameters: parameters for contract method.
+    ///
+    /// - Parameters:
+    ///                 - `method`: ContractMethods variable represents the contract method to call.
+    ///                 - `parameters`: parameters for contract method.
+    ///
     /// - Returns: Escaping result.
     ///                 < Success: [String:Any], Failure: Web3Error >
     ///
@@ -83,7 +86,7 @@ class Web3Services {
                 options.gasPrice = .automatic
                 options.gasLimit = .automatic
                 
-                //
+                
                 let tx = contract.read(method.rawValue,
                                        parameters: parameters,
                                        extraData: extraData,
@@ -103,10 +106,12 @@ class Web3Services {
     /// Async method to read contract data.
 
     /// - Note: Adjustable contract parameters work great for fetching token balances.
-    /// - Parameter contractAddress:String of contract address.
-    /// - Parameter contractABI: String of contract abi.
-    /// - Parameter method: String of contract method to call (Must match contract ABI)
-    /// - Parameter parameters: List of AnyObject's used for parameters of contract method .
+    /// - Parameter :
+    ///                 - `contractAddress`: String of contract address.
+    ///                 - `contractABI`: String of contract abi.
+    ///                 - `method`: String of contract method to call (Must match contract ABI)
+    ///                 - `parameters`: List of AnyObject's used for parameters of contract method .
+    ///
     /// - Returns: Escaping result.
     ///                 < Success: [String:Any], Failure: Web3Error >
     ///
@@ -144,9 +149,11 @@ class Web3Services {
     /// Async method to write contract data  // Called when data is being written to the contract or on chain
     ///
     /// - Note: This requires keystore password as the tx need to be signed by the private key
-    /// - Parameter method: ContractMethods enum, contract method to call (Using the rawValue String)
-    /// - Parameter parameters:list of Any objects used for input for contract method
-    /// - Parameter password: String password that was used to create the keystore (ie encrypt the privatekey)
+    /// - Parameters :
+    ///                    - `method` :  enum  ContractMethods , contract method to call (Using the rawValue String)
+    ///                    - `parameter` : list of Any objects used for input for contract method
+    ///                    - `password` : String password that was used to create the keystore (ie encrypt the privatekey)
+    ///
     /// - Returns: Escaping Result.
     ///                     <Success: TransactionSendingResult, Failure: Web3Error>
     ///
@@ -188,11 +195,14 @@ class Web3Services {
     ///
     ///
     /// - Note: This requires keystore (Wallet) password as the tx need to be signed by the private key
-    /// - Parameter contractAddress:String of contract address.
-    /// - Parameter contractABI: String of contract abi.
-    /// - Parameter method: String of contract method to call (Must match contract ABI)
-    /// - Parameter parameters:list of Any objects used for input for contract method
-    /// - Parameter password: String password that was used to create the keystore (ie encrypt the privatekey)
+    ///
+    /// - Parameters:
+    ///                 - `contractAddress`:String of contract address.
+    ///                 - `contractABI`: String of contract abi.
+    ///                 - `method`: String of contract method to call (Must match contract ABI)
+    ///                 - `parameters`:list of Any objects used for input for contract method
+    ///                 - `password`: String password that was used to create the keystore (ie encrypt the privatekey)
+    ///
     /// - Returns: Escaping Result.
     ///                     <Success: TransactionSendingResult, Failure: Web3Error>
     ///
@@ -227,5 +237,4 @@ class Web3Services {
             }
         }
     }
-    
 }

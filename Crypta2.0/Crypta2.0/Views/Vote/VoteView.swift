@@ -32,6 +32,7 @@ struct VoteView: View {
         
         ZStack{
             NavigationView {
+                // List handles the selected choice index
                 List(voteVM.choices,id: \.id, selection: $selection) { choice in
                     Button {
                         //print("Choice selected \(choice.description)")
@@ -65,7 +66,7 @@ struct VoteView: View {
             }
         }
         .task{
-            // only load
+            // only load if choices is empty
             if(voteVM.choices.isEmpty){
                 voteVM.getChoices(groupId: groupId, proposal: proposal)
             }
@@ -130,7 +131,7 @@ struct VoteView: View {
                         }else{
                             if selection != nil {
                                 // Casting vote
-                                voteVM.castVote(groupId: groupId, proposalId: proposal.id!, choiceId: selection!, password: "") {success in
+                                voteVM.castVote(groupId: groupId, proposalId: proposal.id!, choiceId: selection!, password: password) {success in
                                     proposal.vote!.hasVoted = true
                                     proposal.vote!.indexChoice = BigUInt(selection!)
                                     proposalVM.proposals[Int(proposal.id!)].vote?.hasVoted = true

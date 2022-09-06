@@ -17,7 +17,16 @@ class VoteViewModel:ObservableObject{
     @Published var error:Web3Services.Web3ServiceError?
     @Published var popOverCredInput = false
     
-
+    // MARK: getChoices
+    /// Gets data for each proposal choice
+    ///
+    /// - note: populates the choices array
+    ///
+    /// - Parameters:
+    ///              - `groupId` id of group to get proposals from
+    ///              - `proposal` Proposal to get choice's
+    ///
+    ///
     func getChoices(groupId:BigUInt,proposal:Proposal)  {
         let params = [groupId,proposal.id] as [AnyObject]
      
@@ -31,7 +40,7 @@ class VoteViewModel:ObservableObject{
                     let choicesArray = value["0"] as! Array<Any>
                     var allChoices:[Choice] = []
                     var indexId = 0
-        
+                    
                     for choiceObject in choicesArray {
                         
                         let data = choiceObject as! Array<Any>
@@ -59,7 +68,7 @@ class VoteViewModel:ObservableObject{
      Bug found within the web3swift pod
      
      When attempting to cast a vote twice, contract method reverts.
-     Web3swift treats this as a processing error (wich it is) but with the incorrect statement
+     Web3swift treats this as a processing error (which it is) but with the incorrect statement
      This only occurs with sending a write tx
      
      - Failure returns
@@ -69,6 +78,19 @@ class VoteViewModel:ObservableObject{
             You have already voted.
      */
     
+    // MARK: castVote
+    /// allows user to cast a vote
+    ///
+    ///
+    /// - Parameters:
+    ///              - `groupId` id of group
+    ///              - `proposalId` id of proposal
+    ///              - `choiceId` id of choice to add vote
+    ///              - `password` password of keyStore casting vote
+    ///
+    /// - Returns: Escaping Result.
+    ///           <Success: TransactionSendingResult>
+    ///
     func castVote(groupId:BigUInt,proposalId:BigUInt,choiceId:Int,password:String,completion:@escaping(TransactionSendingResult) -> Void) {
         let params = [groupId,proposalId,choiceId] as [AnyObject]
         showProgress = true
@@ -87,7 +109,19 @@ class VoteViewModel:ObservableObject{
             }
         }
     }
-    
+
+    // MARK: removeVote
+    /// allows user to remove a vote
+    ///
+    ///
+    /// - Parameters:
+    ///              - `groupId` id of group
+    ///              - `proposalId` id of proposal
+    ///              - `password` password of keyStore removing vote
+    ///
+    /// - Returns: Escaping Result.
+    ///           <Success: TransactionSendingResult>
+    ///
     func removeVote(groupId:BigUInt,proposalId:BigUInt,password:String,completion:@escaping(TransactionSendingResult) -> Void) {
         let params = [groupId,proposalId] as [AnyObject]
         showProgress = true

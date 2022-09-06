@@ -11,20 +11,19 @@ import UIKit
 import BigInt
 
 
-
-// MARK: - Welcome
+// MARK: - SocketMessage
 struct SocketMessage: Codable {
     let jsonrpc, method: String
     let params: SocketParams
 }
 
-// MARK: - Params
+// MARK: - SocketParams
 struct SocketParams: Codable {
     let subscription: String
     let result: SocketResult
 }
 
-// MARK: - Result
+// MARK: - SocketResult
 struct SocketResult: Codable {
     let address: String
     let topics: [String]

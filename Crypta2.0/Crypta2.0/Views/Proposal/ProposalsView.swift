@@ -76,12 +76,18 @@ struct ProposalsView: View {
                             destination: VoteView(groupId: selectedGroup.id!, proposal: proposal, selection: proposal.vote!.hasVoted ? Int(proposal.vote!.indexChoice) : nil ).environmentObject(proposalVM),
                             label: {
                                 if proposal.vote!.hasVoted {
+                                   
                                     Image(systemName: "checkmark.circle")
                                         .font(.headline)
                                 }
                                 VStack(spacing: 10){
                                     Text(proposal.title).font(.headline)
                                     Text(proposal.description).font(.subheadline)
+                                    if proposal.proposalEnd < NSDate().timeIntervalSince1970 {
+                                        Text("Closed").foregroundColor(.red)
+                                    }else{
+                                        Text("Open").foregroundColor(.green)
+                                    }
                                 }
                             }
                         ).disabled(contentVM.sendingWriteTx)
@@ -110,7 +116,7 @@ struct ProposalsView: View {
             .task {
                 
                 // Dont load proposals if count is zero or if we have already loaded
-                if selectedGroup.proposalCount != 0 && proposalVM.proposals.count != selectedGroup.proposalCount! {
+                 if selectedGroup.proposalCount != 0 && proposalVM.proposals.count != selectedGroup.proposalCount! {
                     proposalVM.fetchProposals(groupId: Int(selectedGroup.id!),numberOfProposals: Int(selectedGroup.proposalCount!))
                 }
             }
@@ -166,6 +172,8 @@ struct ProposalsView: View {
                             choiceTwo = ""
                             //update selectedGroup
                             selectedGroup.proposalCount! += 1
+                            // will notify the groups view that group data changed
+                            contentVM.contentChangedForGroup = selectedGroup
                             // show tx
                             contentVM.txToShow = success
                             contentVM.showPopOverForTx = true

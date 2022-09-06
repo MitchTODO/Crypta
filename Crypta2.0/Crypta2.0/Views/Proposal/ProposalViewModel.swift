@@ -12,13 +12,26 @@ import web3swift
 class ProposalViewModel:ObservableObject {
                       
     @Published var showEventPopOver = false
+    
+    // Proposals array
     @Published var proposals:[Proposal] = []
     
     @Published var showProgress = false
     @Published var error:Web3Services.Web3ServiceError?
     
-    // add func to check if proposal has expired
-
+    // MARK: removeGroup
+    /// Allows the group creator to delete the group
+    ///
+    /// - note: This method is currently not used
+    ///         Only callable by group creator
+    ///
+    /// - Parameters:
+    ///              - `groupId` id of group to delete
+    ///              - `password` password of senders keyStore
+    ///
+    /// - Returns: Escaping Result.
+    ///           <Success: TransactionSendingResult>
+    ///
     func removeGroup(groupId:BigUInt,password:String,completion:@escaping(TransactionSendingResult) -> Void) {
         showProgress = true
         let params = [groupId] as [AnyObject]
@@ -39,7 +52,15 @@ class ProposalViewModel:ObservableObject {
     }
     
     
-    // fetch events based on groupId
+    // MARK: fetchProposals
+    /// Fetch proposals for a given group
+    ///
+    /// - note: Populates the `proposals` array
+    ///
+    /// - Parameters:
+    ///              - `groupId` id of group to get proposals from
+    ///              - `numberOfProposals` Amount of proposal to fetch
+    ///
     func fetchProposals(groupId:Int,numberOfProposals:Int) {
         showProgress = true
         let params = [groupId,0,numberOfProposals] as [AnyObject]
@@ -88,6 +109,21 @@ class ProposalViewModel:ObservableObject {
         }
     }
     
+    
+    // MARK: createProposal
+    /// Creates a new proposal within  a group
+    ///
+    ///
+    /// - Parameters:
+    ///              - `groupId` id of group to get proposals from
+    ///              - `proposal` proposal to create ( duration, title,description)
+    ///              - `choiceOne` title of choice one
+    ///              - `choiceTwo` title of choice two
+    ///              - `password` password of keyStore writing the proposal
+    ///
+    /// - Returns: Escaping Result.
+    ///           <Success: TransactionSendingResult>
+    ///
     func createProposal(groupId:BigUInt,proposal:Proposal,choiceOne:String,choiceTwo:String ,password:String, completion:@escaping(TransactionSendingResult) -> Void){
         showProgress = true
         let startTime = Int(proposal.proposalStart)

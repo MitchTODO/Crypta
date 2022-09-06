@@ -48,8 +48,15 @@ This project is a submission for an Gitcoin bounty by the Celo Network. The goal
 - iOS 15.2+
 - Xcode 13.2.1+
 - Swift 5+
-- Cocoapods
+- [Cocoapods](https://guides.cocoapods.org/using/getting-started.html)
 
+## Update 1.2 
+
+- Upgrade wallet to BIP32Keystore allowing for a mnemonics to be used.
+
+- Storing wallet data in users device Key Manager (Apples Key Chain) allowing for better data loss prevention.
+
+- Improved comments
 
 ## Quick Start
 

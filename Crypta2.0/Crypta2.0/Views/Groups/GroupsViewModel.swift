@@ -13,6 +13,8 @@ import SwiftUI
 class GroupViewModel:ObservableObject {
     
     @Published var credentials = Credentials()
+    
+    // Amount of groups and the groups array
     @Published var amountOfGroups:BigUInt?
     @Published var groups:[Group] = []
     
@@ -31,6 +33,16 @@ class GroupViewModel:ObservableObject {
     }
    
     // MARK: createGroup
+    /// Creates new group
+    ///
+    /// - Note: Doesn't emit a failing escaping result. Instead we set the binding error varaible that will display the error to user.
+    ///
+    /// - Parameters:
+    ///                 - `group`: group struct that will be created
+    ///                 - `password` : password of sender that will create the group
+    ///
+    /// - Returns: Escaping Result.
+    ///           <Success: TransactionSendingResult>
     ///
     func createGroup(group:Group,password:String,completion:@escaping(TransactionSendingResult) -> Void) {
         showProgress = true
@@ -58,13 +70,12 @@ class GroupViewModel:ObservableObject {
         }
     }
     
-    
+    // MARK:
+    // Returns int amount of groups
     func groupAmount() {
         showProgress = true
         let params = [] as [AnyObject]
-
         Web3Services.shared.readContractMethod( method: .groupIdTracker, parameters: params){
-            
             result in
             DispatchQueue.main.async { [unowned self] in
                 
@@ -85,6 +96,7 @@ class GroupViewModel:ObservableObject {
     
     // MARK: fetchGroups
     // fetchs groups in batches
+    // Add groups to the class groups Array
     func fetchGroups() {
         showProgress = true
         if amountOfGroups == nil {
